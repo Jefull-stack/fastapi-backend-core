@@ -1,4 +1,4 @@
-# FastAPI Backend Service
+# FastAPI Backend Core
 
 Production-ready REST API built with FastAPI, focusing on performance, scalability, and clean architecture.
 
