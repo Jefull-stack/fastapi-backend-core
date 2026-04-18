@@ -1,94 +1,139 @@
 # FastAPI Backend Core
 
-REST API built with FastAPI, focused on clean architecture, scalability, and maintainability.  
-Includes authentication, modular structure, and database migrations.
+REST API built with FastAPI, focusing on clean architecture, security, and scalability.
+
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.136-009688?style=flat&logo=fastapi&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-D71F00?style=flat)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat&logo=postgresql&logoColor=white)
 
 ---
 
-🚀 Features
+## Features
 
-- User authentication (signup + login)
-- Password hashing with bcrypt
-- Modular project structure (routers, models, schemas, dependencies)
-- Database integration with SQLAlchemy
-- Alembic migrations for versioned database changes
-- Automatic interactive docs (Swagger UI)
-
----
-
-🧱 Project Structure
-
-project/
-├── alembic/Database migrations
-
-├── models/ # SQLAlchemy models
-
-├── schemas/ # Pydantic schemas
-
-├── routers/ # API routes
-
-├── dependencies/ # DB/session dependencies
-
-├── database/ # DB connection setup
-
-├── main.py # FastAPI entrypoint
-
-├── alembic.ini
-
-└── requirements.txt
+- User registration and authentication with **JWT** (access + refresh token)
+- Password hashing with **bcrypt**
+- Database integration with **SQLAlchemy** + **PostgreSQL**
+- Schema validation with **Pydantic v2**
+- Clean architecture: routers, models, schemas, and dependencies separated
+- Order management routes
 
 ---
 
-Tech Stack
+## Tech Stack
 
-- FastAPI
-- SQLAlchemy
-- Alembic
-- Pydantic
-- Passlib (bcrypt)
-- Uvicorn
+| Layer | Technology |
+|---|---|
+| Framework | FastAPI |
+| Database | PostgreSQL + SQLAlchemy |
+| Auth | JWT via python-jose |
+| Hashing | passlib + bcrypt |
+| Validation | Pydantic v2 |
+| Server | Uvicorn |
+
+---
+
+## Project Structure
+
+```
+fastapi-backend-core/
+├── main.py
+├── dependencies.py
+├── models.py
+├── schemas.py
+├── requirements.txt
+├── .env.example
+└── routers/
+    ├── auth_routes.py
+    └── order_routes.py
+└── core/
+    └── security.py
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
 - Python 3.10+
+- PostgreSQL running locally or via Docker
 
----
-
-Installation
+### Installation
 
 ```bash
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
+# Clone the repository
+git clone https://github.com/Jefull-stack/fastapi-backend-core.git
+cd fastapi-backend-core
+
+# Create and activate virtual environment
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your database credentials and secret key
 ```
 
-Database Setup
-Run migrations with Alembic:
-```bash
-alembic upgrade head
+### Environment Variables
+
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+SECRET_KEY=your-secret-key-here
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
 
-Running the API
+### Running
+
 ```bash
 uvicorn main:app --reload
 ```
 
-API will be available at:
-http://127.0.0.1:8000
-Docs: http://127.0.0.1:8000/docs
+API available at `http://localhost:8000`  
+Interactive docs at `http://localhost:8000/docs`
 
-Authentication
-POST /auth/signup → Register user
-POST /auth/login → Authenticate user (to be implemented / or implemented)
+---
 
-Notes
-.env is not included (use your own environment variables)
-.venv and local database are ignored in version control
+## API Endpoints
 
-📈 Future Improvements
-JWT authentication
-Role-based access control
-Docker support
-Testing (Pytest)
+### Auth
 
-License
+| Method | Endpoint | Description | Auth required |
+|---|---|---|---|
+| POST | `/auth/signup` | Register new user | No |
+| POST | `/auth/login` | Login and receive tokens | No |
+| POST | `/auth/refresh` | Refresh access token | No |
+| GET | `/auth/me` | Get current user | Yes |
+
+### Orders
+
+| Method | Endpoint | Description | Auth required |
+|---|---|---|---|
+| GET | `/orders/` | List orders | Yes |
+
+---
+
+## Example Request
+
+**Register:**
+```bash
+curl -X POST http://localhost:8000/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{"name": "John", "email": "john@email.com", "password": "senha123"}'
+```
+
+**Authenticated request:**
+```bash
+curl http://localhost:8000/auth/me \
+  -H "Authorization: Bearer <access_token>"
+```
+
+---
+
+## License
+
 MIT
