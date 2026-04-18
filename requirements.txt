@@ -16,16 +16,16 @@ pyasn1==0.6.3
 pycparser==3.0
 pydantic==2.13.2
 pydantic_core==2.46.2
-pydantic-settings==2.2.1     # para carregar .env com Settings
-python-dotenv==1.0.1         # para o .env funcionar
-python-multipart==0.0.9      # obrigatório para forms no FastAPI
+pydantic-settings==2.2.1
+python-dotenv==1.0.1
+python-multipart==0.0.9
 python-jose==3.5.0
 rsa==4.9.1
 six==1.17.0
 SQLAlchemy==2.0.49
-psycopg2-binary==2.9.9       # driver do PostgreSQL
-alembic==1.13.1              # migrations
-httpx==0.27.0                # para os testes com TestClient
+psycopg2-binary==2.9.9
+alembic==1.13.1
+httpx==0.27.0
 starlette==1.0.0
 typing-inspection==0.4.2
 typing_extensions==4.15.0
