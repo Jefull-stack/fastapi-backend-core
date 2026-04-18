@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from core.secutiry import hash_password
+from core.security import hash_password
 from dependencies import take_session
 from models import User
 from schemas import UserCreate, UserResponse
