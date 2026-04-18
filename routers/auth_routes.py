@@ -17,7 +17,7 @@ def signup(payload: UserCreate, db: Session = Depends(take_session)):
    new_user = User(
     name=payload.name,
     email=email,
-    password=hash_password(payload.password)
+    hashed_password=hash_password(payload.password)
     )
    try:
         db.add(new_user)
