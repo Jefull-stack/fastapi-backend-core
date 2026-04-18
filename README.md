@@ -5,7 +5,7 @@ Includes authentication, modular structure, and database migrations.
 
 ---
 
-##Features
+🚀 Features
 
 - User authentication (signup + login)
 - Password hashing with bcrypt
@@ -16,22 +16,30 @@ Includes authentication, modular structure, and database migrations.
 
 ---
 
-##Project Structure
-project/
-├── alembic/ # Database migrations
-├── models/ # SQLAlchemy models
-├── schemas/ # Pydantic schemas
-├── routers/ # API routes
-├── dependencies/ # DB/session dependencies
-├── database/ # DB connection setup
-├── main.py # FastAPI entrypoint
-├── alembic.ini
-└── requirements.txt
+🧱 Project Structure
 
+project/
+├── alembic/Database migrations
+
+├── models/ # SQLAlchemy models
+
+├── schemas/ # Pydantic schemas
+
+├── routers/ # API routes
+
+├── dependencies/ # DB/session dependencies
+
+├── database/ # DB connection setup
+
+├── main.py # FastAPI entrypoint
+
+├── alembic.ini
+
+└── requirements.txt
 
 ---
 
-##Tech Stack
+Tech Stack
 
 - FastAPI
 - SQLAlchemy
@@ -43,23 +51,26 @@ project/
 
 ---
 
-##Installation
+Installation
 
 ```bash
 git clone https://github.com/your-username/your-repo.git
 cd your-repo
-
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
-
 pip install -r requirements.txt
+```
 
-## Database Setup
+Database Setup
 Run migrations with Alembic:
+```bash
 alembic upgrade head
+```
 
 Running the API
+```bash
 uvicorn main:app --reload
+```
 
 API will be available at:
 http://127.0.0.1:8000
