@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from core.security import verify_and_update, hash_password
+from core.security import verify_and_update, hash_password, create_access_token
 from dependencies import take_session
 from models import User
-from schemas import UserCreate, UserResponse
+from schemas import UserCreate, UserResponse, UserLogin
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -30,3 +30,23 @@ def signup(payload: UserCreate, db: Session = Depends(take_session)):
             detail="Email already registered"
         )
    return new_user
+
+@auth_router.post("/login")
+def login(payload: UserLogin, db: Session = Depends(take_session)):
+    
+    user = db.query(User).filter(User.email == payload.email.lower().strip()).first()
+
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    valid, new_hash = verify_and_update(payload.password, user.hashed_password)
+
+    if not valid:
+     raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    if new_hash:
+       user.hashed_password = new_hash
+       db.commit()
+    token = create_access_token({"sub": user.id})
+    return {"access_token": token, "token_type": "bearer"}
+    
