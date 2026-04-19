@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import inspect
 
 from core.security import verify_and_update, hash_password, create_access_token
-from dependencies import take_session
+from dependencies.dependencies import take_session
 from models import User
 from schemas import UserCreate, UserResponse, UserLogin
 
@@ -18,7 +18,7 @@ def signup(payload: UserCreate, db: Session = Depends(take_session)):
    new_user = User(
     name=payload.name,
     email=email,
-    hashed_password=hash_password(payload.password)
+    password=hash_password(payload.password)
     )
    try:
         db.add(new_user)
