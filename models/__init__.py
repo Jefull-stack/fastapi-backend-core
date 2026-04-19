@@ -22,9 +22,9 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
 
     orders = relationship(
-    "Order",
-    back_populates="user",
-    cascade="all, delete-orphan"
+        "Order",
+        back_populates="user",
+        cascade="all, delete-orphan"
 )
 
 
