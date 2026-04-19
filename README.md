@@ -27,7 +27,7 @@ REST API built with FastAPI, focusing on clean architecture, security, and scala
 | Framework | FastAPI |
 | Database | PostgreSQL + SQLAlchemy |
 | Auth | JWT via python-jose |
-| Hashing | passlib + bcrypt |
+| Hashing | passlib + argon2 or bycrypt |
 | Validation | Pydantic v2 |
 | Server | Uvicorn |
 
