@@ -21,3 +21,16 @@ class UserResponse(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+class OrderCreate(BaseModel):
+    user_id: int
+    quantity: int
+
+class OrderResponse(BaseModel):
+    id: int
+    user_id: int
+    description: str
+    total: float
+    status: str
+
+    model_config = {"from_attributes": True}
