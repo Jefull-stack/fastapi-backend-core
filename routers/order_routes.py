@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from dependencies import take_session
+from dependencies.dependencies import take_session
 from schemas import OrderCreate, OrderResponse
 from models import Order
 
