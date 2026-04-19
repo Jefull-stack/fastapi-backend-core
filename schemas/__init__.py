@@ -34,3 +34,5 @@ class OrderResponse(BaseModel):
     status: str
 
     model_config = {"from_attributes": True}
+    
+class RefreshTokenRequest(BaseModel):
