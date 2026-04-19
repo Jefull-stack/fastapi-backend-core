@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import inspect
 
 from core.security import verify_and_update, hash_password, create_access_token
-from dependencies.dependencies import take_session
+from dependencies import take_session
 from models import User
 from schemas import UserCreate, UserResponse, UserLogin
 
