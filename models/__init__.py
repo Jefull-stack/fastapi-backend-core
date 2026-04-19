@@ -3,14 +3,6 @@ from sqlalchemy.orm import relationship
 from enum import Enum
 from database.database import Base
 
-class OrderStatus(str, Enum):
-    pending = "pending"
-    processing = "processing"
-    shipped = "shipped"
-    delivered = "delivered"
-    cancelled = "cancelled"
-
-
 class User(Base):
     __tablename__ = "users"
 
@@ -27,6 +19,13 @@ class User(Base):
         cascade="all, delete-orphan"
 )
 
+    
+class OrderStatus(str, Enum):
+    pending = "pending"
+    processing = "processing"
+    shipped = "shipped"
+    delivered = "delivered"
+    cancelled = "cancelled"
 
 class Order(Base):
     __tablename__ = "orders"
