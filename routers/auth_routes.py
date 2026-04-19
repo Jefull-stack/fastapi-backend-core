@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+from sqlalchemy import inspect
 
 from core.security import verify_and_update, hash_password, create_access_token
 from dependencies import take_session
@@ -46,6 +47,7 @@ def login(payload: UserLogin, db: Session = Depends(take_session)):
     
     if new_hash:
        user.hashed_password = new_hash
+       db.add(user)
        db.commit()
     token = create_access_token({"sub": user.id})
     return {"access_token": token, "token_type": "bearer"}
