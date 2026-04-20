@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from core.security import verify_and_update, hash_password, create_access_token, decode_token
+from core.security import verify_and_update, hash_password, create_access_token, create_refresh_token, decode_token
 from dependencies.session import take_session
 from models import User
 from schemas import UserCreate, UserResponse, UserLogin, RefreshTokenRequest
@@ -24,6 +24,7 @@ def signup(payload: UserCreate, db: Session = Depends(take_session)):
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
+        
     except IntegrityError:
         db.rollback()
         raise HTTPException(
@@ -34,27 +35,24 @@ def signup(payload: UserCreate, db: Session = Depends(take_session)):
 
 @auth_router.post("/login")
 def login(payload: UserLogin, db: Session = Depends(take_session)):
-    
     user = db.query(User).filter(User.email == payload.email.lower().strip()).first()
 
     if not user:
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid credentials")
+        raise HTTPException(status_code=401, detail="Invalid credentials")
     
-    valid, new_hash = verify_and_update(payload.password, user.hashed_password)
+    valid, new_hash = verify_and_update(payload.password, str(user.hashed_password))
 
     if not valid:
-        raise HTTPException(
-            status_code=401,detail=
-            "Invalid credentials")
+        raise HTTPException(status_code=401, detail="Invalid credentials")
     
     if new_hash:
-        user.hashed_password = new_hash
+        user.hashed_password = new_hash #type: ignore
         db.add(user)
         db.commit()
-    token = create_access_token({"sub": user.id})
-    return {"access_token": token, "token_type": "bearer"}
+
+    access_token = create_access_token({"sub": user.id})
+    refresh_token = create_refresh_token({"sub": user.id})
+    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 @auth_router.post("/refresh")
 def refresh(payload:RefreshTokenRequest):
