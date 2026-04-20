@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from dependencies import take_session
+from dependencies.auth import take_session
 from schemas import OrderCreate, OrderResponse
 from models import Order
 
@@ -20,4 +20,3 @@ async def create_order(payload: OrderCreate, session: Session = Depends(take_ses
     session.commit()
     session.refresh(new_order)
     return {"message": f"New order created with success. Order ID: {new_order.id}"}
-    
