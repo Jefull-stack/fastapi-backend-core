@@ -1,7 +1,7 @@
 from passlib.context import CryptContext
 from passlib.exc import UnknownHashError
 from datetime import datetime, timedelta, timezone
-from jose import jwt, JWTError
+from jose import jwt, JWTError, ExpiredSignatureError
 
 from core.config import settings
 
@@ -10,8 +10,9 @@ pwd_context = CryptContext(
     deprecated="auto"
 )
 def token_needs_sub(data: dict):
-    if "sub" not in data:
-        raise ValueError("Token needs 'sub'")
+    sub = data.get("sub")
+    if not sub:
+        raise ValueError("Token needs a valid 'sub'")
     
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
@@ -53,6 +54,12 @@ def create_refresh_token(data: dict) -> str:
 
 def decode_token(token: str) -> dict | None:
     try:
-        return jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        return jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM],
+        )
+    except ExpiredSignatureError:
+        return None  # ou tratar diferente
     except JWTError:
         return None
