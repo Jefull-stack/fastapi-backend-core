@@ -9,7 +9,10 @@ pwd_context = CryptContext(
     schemes=["argon2", "bcrypt"],
     deprecated="auto"
 )
-
+def token_needs_sub(data: dict):
+    if "sub" not in data:
+        raise ValueError("Token needs 'sub'")
+    
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
@@ -20,8 +23,7 @@ def verify_and_update(plain: str, hashed: str) -> tuple[bool, str | None]:
         return False, None
 
 def create_access_token(data: dict, expires_minutes: int | None = None) -> str:
-    if "sub" not in data:
-        raise ValueError("Token needs 'sub'")
+    token_needs_sub(data)
     
     now = datetime.now(timezone.utc)
     minutes = expires_minutes or settings.ACCESS_TOKEN_EXPIRE_MINUTES
@@ -32,6 +34,20 @@ def create_access_token(data: dict, expires_minutes: int | None = None) -> str:
     "iat": now,
     "exp": expire,
     "type": "access",
+    }
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+def create_refresh_token(data: dict) -> str:
+    token_needs_sub(data)
+    
+    now = datetime.now(timezone.utc)
+    expire = now + timedelta(days=7)
+    
+    payload = {
+    "sub": str(data["sub"]),
+    "iat": now,
+    "exp": expire,
+    "type": "refresh",
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
