@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-from sqlalchemy import inspect
 
 from core.security import verify_and_update, hash_password, create_access_token
 from dependencies import take_session
 from models import User
-from schemas import UserCreate, UserResponse, UserLogin
+from schemas import UserCreate, UserResponse, UserLogin, RefreshTokenRequest
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -57,5 +56,11 @@ def login(payload: UserLogin, db: Session = Depends(take_session)):
         return {"access_token": token, "token_type": "bearer"}
 
 @auth_router.post("/refresh")
-def refresh():
+def refresh(payload:RefreshTokenRequest):
+    token_data = decode_token(payload.refresh_token)
     
+    if not token_data or token_data.get("type") != "refresh":
+        raise HTTPException(status_code=401, detail="Invalid refresh token")
+    
+    new_token = create_access_token({"sub":token_data ["sub"] })
+    return {"access_token": new_token, "token_type": "bearer"}
