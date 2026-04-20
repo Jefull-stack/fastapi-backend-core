@@ -38,16 +38,21 @@ REST API built with FastAPI, focusing on clean architecture, security, and scala
 ```
 fastapi-backend-core/
 ├── main.py
-├── dependencies.py
-├── models.py
-├── schemas.py
 ├── requirements.txt
 ├── .env.example
-└── routers/
-    ├── auth_routes.py
-    └── order_routes.py
-└── core/
-    └── security.py
+├── core/
+│   ├── config.py
+│   └── security.py
+├── database/
+│   └── database.py
+├── dependencies/
+│   ├── auth.py
+│   └── session.py
+├── models/
+├── routers/
+│   ├── auth_routes.py
+│   └── order_routes.py
+└── schemas/
 ```
 
 ---
@@ -114,6 +119,7 @@ Interactive docs at `http://localhost:8000/docs`
 | Method | Endpoint | Description | Auth required |
 |---|---|---|---|
 | GET | `/orders/` | List orders | Yes |
+| POST | `/orders/` | Create order | Yes |
 
 ---
 
