@@ -45,10 +45,10 @@ def create_refresh_token(data: dict) -> str:
     expire = now + timedelta(days=7)
     
     payload = {
-    "sub": str(data["sub"]),
-    "iat": now,
-    "exp": expire,
-    "type": "refresh",
+        "sub": str(data["sub"]),
+        "iat": now,
+        "exp": expire,
+        "type": "refresh",
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
