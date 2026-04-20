@@ -24,15 +24,19 @@ class UserLogin(BaseModel):
 
 class OrderCreate(BaseModel):
     user_id: int
+    item_name: str
     quantity: int
-
+    price: float
+    
 class OrderResponse(BaseModel):
     id: int
     user_id: int
-    description: str
-    total: float 
-    status: str
+    item_name: str
+    quantity: int
+    price: float
+    status: str | None = None
 
     model_config = {"from_attributes": True}
     
 class RefreshTokenRequest(BaseModel):
+    refresh_token: str
