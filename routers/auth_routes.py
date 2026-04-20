@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from core.security import verify_and_update, hash_password, create_access_token
+from core.security import verify_and_update, hash_password, create_access_token, decode_token
 from dependencies import take_session
 from models import User
 from schemas import UserCreate, UserResponse, UserLogin, RefreshTokenRequest
