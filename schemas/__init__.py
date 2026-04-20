@@ -30,7 +30,7 @@ class OrderResponse(BaseModel):
     id: int
     user_id: int
     description: str
-    total: float
+    total: float 
     status: str
 
     model_config = {"from_attributes": True}
