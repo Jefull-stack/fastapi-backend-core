@@ -31,10 +31,10 @@ def create_access_token(data: dict, expires_minutes: int | None = None) -> str:
     expire = now + timedelta(minutes=minutes)
 
     payload = {
-    "sub": str(data["sub"]),
-    "iat": now,
-    "exp": expire,
-    "type": "access",
+        "sub": str(data["sub"]),
+        "iat": now,
+        "exp": expire,
+        "type": "access",
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
