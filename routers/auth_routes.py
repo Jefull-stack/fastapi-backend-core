@@ -3,9 +3,10 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from core.security import verify_and_update, hash_password, create_access_token, decode_token
-from dependencies import take_session
+from dependencies.session import take_session
 from models import User
 from schemas import UserCreate, UserResponse, UserLogin, RefreshTokenRequest
+from dependencies.auth import get_current_user
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -17,7 +18,7 @@ def signup(payload: UserCreate, db: Session = Depends(take_session)):
     new_user = User(
         name=payload.name,
         email=email,
-        password=hash_password(payload.password)
+        hashed_password=hash_password(payload.password)
     )
     try:
         db.add(new_user)
@@ -52,8 +53,8 @@ def login(payload: UserLogin, db: Session = Depends(take_session)):
         user.hashed_password = new_hash
         db.add(user)
         db.commit()
-        token = create_access_token({"sub": user.id})
-        return {"access_token": token, "token_type": "bearer"}
+    token = create_access_token({"sub": user.id})
+    return {"access_token": token, "token_type": "bearer"}
 
 @auth_router.post("/refresh")
 def refresh(payload:RefreshTokenRequest):
@@ -64,3 +65,7 @@ def refresh(payload:RefreshTokenRequest):
     
     new_token = create_access_token({"sub":token_data ["sub"] })
     return {"access_token": new_token, "token_type": "bearer"}
+
+@auth_router.get("/me", response_model=UserResponse)
+def get_me(current_user: User = Depends(get_current_user)):
+    return current_user
