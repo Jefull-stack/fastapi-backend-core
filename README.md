@@ -119,6 +119,7 @@ Interactive docs at `http://localhost:8000/docs`
 | Method | Endpoint | Description | Auth required |
 |---|---|---|---|
 | GET | `/orders/` | List orders | Yes |
+| POST | `/orders/` | Create order | Yes |
 
 ---
 
