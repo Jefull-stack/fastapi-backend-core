@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from dependencies.auth import get_current_user
 from dependencies.session import take_session
 from schemas import OrderCreate
-from models import User, Order
+from models import User, Order, OrderStatus
 
 
 order_router = APIRouter(prefix="/orders", tags=["orders"])
@@ -32,3 +32,24 @@ async def create_order(
     session.commit()
     session.refresh(new_order)
     return {"message": f"New order created with success. Order ID: {new_order.id}"}
+
+@order_router.patch("/{order_id}/cancel")
+def cancel_order(
+    order_id: int,
+    session: Session = Depends(take_session),
+    current_user: User = Depends(get_current_user)
+    ):
+    order = session.query(Order).filter(Order.id == order_id).first()
+    
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    if int(order.user_id) != int(current_user): #type: ignore
+        raise HTTPException (status_code=403, detail="Not your order")
+    
+    
+    order.status = OrderStatus.cancelled #type: ignore
+    session.commit()
+    return {"message": f"Order {order_id} cancelled"}
+    
+    
