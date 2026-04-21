@@ -120,6 +120,7 @@ Interactive docs at `http://localhost:8000/docs`
 |---|---|---|---|
 | GET | `/orders/` | List orders | Yes |
 | POST | `/orders/` | Create order | Yes |
+| GET | `/orders/{id}` | Get order by ID | Yes |
 | PUT | `/orders/{id}` | Update order | Yes |
 | PATCH | `/orders/{id}/cancel` | Cancel order | Yes |
 | DELETE | `/orders/{id}` | Delete order | Yes |
