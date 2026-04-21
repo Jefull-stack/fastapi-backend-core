@@ -31,7 +31,7 @@ class Order(Base):
     __tablename__ = "orders"
 
     id = Column(Integer, primary_key=True, index=True)
-    status = Column(SQLEnum(OrderStatus, native_enum=False))
+    status = Column(SQLEnum(OrderStatus, native_enum=False), default=OrderStatus.pending)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     item_name = Column(String, nullable=False)
     quantity = Column(Integer, nullable=False)
