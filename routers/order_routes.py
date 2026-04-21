@@ -50,3 +50,48 @@ async def cancel_order(
     order.status = OrderStatus.cancelled #type: ignore
     session.commit()
     return {"message": f"Order {order_id} cancelled"}
+
+@order_router.put("/{order_id}")
+def update_order(
+    order_id: int,
+    payload: OrderUpdate,
+    session: Session = Depends(take_session),
+    current_user: User = Depends(get_current_user)
+):
+    order = session.query(Order).filter(Order.id == order_id).first()
+
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    if order.user_id != current_user.id:  # type: ignore
+        raise HTTPException(status_code=403, detail="Not your order")
+
+    if payload.item_name:
+        order.item_name = payload.item_name  # type: ignore
+    if payload.quantity:
+        order.quantity = payload.quantity  # type: ignore
+    if payload.price:
+        order.price = payload.price  # type: ignore
+
+    session.commit()
+    session.refresh(order)
+    return order
+
+
+@order_router.delete("/{order_id}")
+def delete_order(
+    order_id: int,
+    session: Session = Depends(take_session),
+    current_user: User = Depends(get_current_user)
+):
+    order = session.query(Order).filter(Order.id == order_id).first()
+
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    if order.user_id != current_user.id:  # type: ignore
+        raise HTTPException(status_code=403, detail="Not your order")
+
+    session.delete(order)
+    session.commit()
+    return {"message": f"Order {order_id} deleted"}
