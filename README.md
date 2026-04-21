@@ -12,11 +12,11 @@ REST API built with FastAPI, focusing on clean architecture, security, and scala
 ## Features
 
 - User registration and authentication with **JWT** (access + refresh token)
-- Password hashing with **bcrypt**
+- Password hashing with **Argon2** (bcrypt fallback with automatic migration)
 - Database integration with **SQLAlchemy** + **PostgreSQL**
 - Schema validation with **Pydantic v2**
 - Clean architecture: routers, models, schemas, and dependencies separated
-- Order management routes
+- Full order management CRUD with status control
 
 ---
 
@@ -27,7 +27,7 @@ REST API built with FastAPI, focusing on clean architecture, security, and scala
 | Framework | FastAPI |
 | Database | PostgreSQL + SQLAlchemy |
 | Auth | JWT via python-jose |
-| Hashing | passlib + argon2 or bycrypt |
+| Hashing | passlib + Argon2 (bcrypt fallback) |
 | Validation | Pydantic v2 |
 | Server | Uvicorn |
 
@@ -120,10 +120,13 @@ Interactive docs at `http://localhost:8000/docs`
 |---|---|---|---|
 | GET | `/orders/` | List orders | Yes |
 | POST | `/orders/` | Create order | Yes |
+| PUT | `/orders/{id}` | Update order | Yes |
+| PATCH | `/orders/{id}/cancel` | Cancel order | Yes |
+| DELETE | `/orders/{id}` | Delete order | Yes |
 
 ---
 
-## Example Request
+## Example Requests
 
 **Register:**
 ```bash
@@ -132,10 +135,25 @@ curl -X POST http://localhost:8000/auth/signup \
   -d '{"name": "John", "email": "john@email.com", "password": "senha123"}'
 ```
 
+**Login:**
+```bash
+curl -X POST http://localhost:8000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "john@email.com", "password": "senha123"}'
+```
+
 **Authenticated request:**
 ```bash
 curl http://localhost:8000/auth/me \
   -H "Authorization: Bearer <access_token>"
+```
+
+**Create order:**
+```bash
+curl -X POST http://localhost:8000/orders/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <access_token>" \
+  -d '{"user_id": 1, "item_name": "Notebook", "quantity": 1, "price": 1500.00}'
 ```
 
 ---
