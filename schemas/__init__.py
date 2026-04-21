@@ -40,3 +40,8 @@ class OrderResponse(BaseModel):
     
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
+    
+class OrderUpdate(BaseModel):
+    item_name: str | None = None
+    quantity: int | None = None
+    price: float | None = None
