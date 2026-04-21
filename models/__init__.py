@@ -49,8 +49,3 @@ class Product(Base):
     description = Column(String)
     price = Column(Float, nullable=False)
     stock = Column(Integer, nullable=False)
-    
-class OrderUpdate(Base):
-    item_name: str | None = None
-    quantity: int | None = None
-    price: float | None = None
