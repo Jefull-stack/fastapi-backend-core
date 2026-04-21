@@ -17,7 +17,7 @@ class User(Base):
         "Order",
         back_populates="user",
         cascade="all, delete-orphan"
-)
+        )
 
     
 class OrderStatus(str, Enum):
