@@ -33,6 +33,22 @@ async def create_order(
     session.refresh(new_order)
     return {"message": f"New order created with success. Order ID: {new_order.id}"}
 
+@order_router.get("/{order_id}")
+async def get_order(
+    order_id: int,
+    session: Session = Depends(take_session),
+    current_user: User = Depends(get_current_user)
+):
+    order = session.query(Order).filter(Order.id == order_id).first()
+
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    if int(order.user_id) != int(current_user.id):  # type: ignore
+        raise HTTPException(status_code=403, detail="Not your order")
+
+    return order
+
 @order_router.patch("/{order_id}/cancel")
 async def cancel_order(
     order_id: int,
