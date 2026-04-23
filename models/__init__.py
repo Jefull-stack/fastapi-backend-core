@@ -1,8 +1,10 @@
-from sqlalchemy import Column, Integer, String, Boolean, Float, ForeignKey, Enum as SQLEnum, DateTime, Numeric
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Enum as SQLEnum, DateTime, Numeric
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from enum import Enum
 from database.database import Base
 
+created_at = Column(DateTime(timezone=True), server_default=func.now())
 class User(Base):
     __tablename__ = "users"
     id = Column(
