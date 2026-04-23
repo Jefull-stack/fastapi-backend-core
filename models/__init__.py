@@ -87,7 +87,8 @@ class Order(Base):
     id = Column(
         Integer,
         primary_key=True,
-        index=True
+        index=True,
+        nullable=False
         )
 
     status = Column(
