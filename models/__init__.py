@@ -4,7 +4,6 @@ from sqlalchemy.sql import func
 from enum import Enum
 from database.database import Base
 
-created_at = Column(DateTime(timezone=True), server_default=func.now())
 class User(Base):
     __tablename__ = "users"
     id = Column(
@@ -44,6 +43,10 @@ class User(Base):
         "Order",
         back_populates="user",
         cascade="all, delete-orphan"
+        )
+    created_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now()
         )
 
 class Product(Base):
@@ -121,6 +124,12 @@ class Order(Base):
         back_populates="order",
         cascade="all, delete-orphan"
         )
+    
+    created_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now()
+        )
+
 class OrderItem(Base):
     __tablename__ = "order_items"
     id = Column(
