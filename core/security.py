@@ -43,7 +43,8 @@ def create_access_token(
     return jwt.encode(
         payload,
         settings.ACCESS_SECRET_KEY,
-        algorithm=settings.ALGORITHM)
+        algorithm=settings.ALGORITHM,
+        )
 
 def create_refresh_token(data: dict) -> str:
     token_needs_sub(data)
@@ -64,11 +65,10 @@ def create_refresh_token(data: dict) -> str:
         settings.REFRESH_SECRET_KEY,
         algorithm=settings.ALGORITHM
         )
-
+    
 def decode_token(
     token: str,
-    expected_type: str | None = None
-) -> dict | None:
+    expected_type: str) -> dict | None:
     try:
         key = (
             settings.ACCESS_SECRET_KEY
@@ -80,11 +80,9 @@ def decode_token(
             token,
             key,
             algorithms=[settings.ALGORITHM],
+            audience="your-client",
+            issuer="your-api"
         )
-
-        if payload.get("iss") != "your-api" or payload.get("aud") != "your-client":
-            return None
-
         if expected_type and payload.get("type") != expected_type:
             return None
 
