@@ -53,26 +53,25 @@ class OrderStatus(str, Enum):
     delivered = "delivered"
     cancelled = "cancelled"
 
-class Order(Base):
-    __tablename__ = "orders"
+class Order(Base):__tablename__ = "orders"
 
-    id = Column(
+id = Column(
         Integer,
         primary_key=True,
         index=True
         )
     
-    status = Column(SQLEnum(
-        OrderStatus,
-        native_enum=True),
-        default=OrderStatus.pending
-        )
+status = Column(SQLEnum(
+    OrderStatus,
+    native_enum=True),
+    default=OrderStatus.pending
+    )
     
-    user_id = Column(
-        Integer,
-        ForeignKey("users.id"),
-        nullable=False
-        )
+user_id = Column(
+    Integer,
+    ForeignKey("users.id"),
+    nullable=False
+    )
     
     item_name = Column(
         String,
@@ -92,6 +91,20 @@ class Order(Base):
     user = relationship(
     "User",
     back_populates="orders")
+    
+    
+class OrderItem(Base):__tablename__ = "order_items"
+
+id = Column(Integer, primary_key=True)
+    
+order_id = Column(Integer, ForeignKey("orders.id"))
+product_id = Column(Integer, ForeignKey("products.id"))
+
+quantity = Column(Integer, nullable=False)
+price = Column(Float, nullable=False) 
+
+order = relationship("Order", back_populates="items")
+product = relationship("Product")
 
 class Product(Base):
     __tablename__ = "products"
