@@ -73,6 +73,11 @@ class Product(Base):
         Integer,
         nullable=False
         )
+    
+    product = relationship(
+    "Product",
+    back_populates="order_items"
+    )
 
 class OrderStatus(str, Enum):
     pending = "pending"
