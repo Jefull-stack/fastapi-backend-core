@@ -1,6 +1,7 @@
 # FastAPI Backend Core
 
-REST API built with FastAPI, focusing on clean architecture, security, and scalability.
+Backend API built with a focus on secure authentication, clean architecture, and continuous system evolution.
+This project goes beyond a simple CRUD by applying real-world design decisions and iterative improvements throughout development.
 
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.136-009688?style=flat&logo=fastapi&logoColor=white)
@@ -9,15 +10,32 @@ REST API built with FastAPI, focusing on clean architecture, security, and scala
 
 ---
 
-## Features
+## Overview
 
 - User registration and authentication with **JWT** (access + refresh token)
+- User-level access control (authorization)
 - Password hashing with **Argon2** (bcrypt fallback with automatic migration)
 - Database integration with **SQLAlchemy** + **PostgreSQL**
 - Schema validation with **Pydantic v2**
-- Clean architecture: routers, models, schemas, and dependencies separated
+- Modular and scalable structure
 - Full order management CRUD with status control
+- User-based data filtering (authorization)
+- Order status lifecycle management
 
+---
+## Architectural Decisions
+- Clear separation between models, schemas, and routes
+- Use of refresh tokens to improve authentication flow
+- Explicit validation of issuer and audience to prevent token misuse
+- Modular structure designed for maintainability and scalability
+---
+
+## Future Improvements
+- Implement token revocation using jti + blacklist
+- Add refresh token rotation
+- Introduce database transactions to prevent race conditions
+- Implement rate limiting for abuse protection
+- Add logging and monitoring
 ---
 
 ## Tech Stack
@@ -120,7 +138,6 @@ Interactive docs at `http://localhost:8000/docs`
 |---|---|---|---|
 | GET | `/orders/` | List orders | Yes |
 | POST | `/orders/` | Create order | Yes |
-| GET | `/orders/{id}` | Get order by ID | Yes |
 | PUT | `/orders/{id}` | Update order | Yes |
 | PATCH | `/orders/{id}/cancel` | Cancel order | Yes |
 | DELETE | `/orders/{id}` | Delete order | Yes |
@@ -156,6 +173,12 @@ curl -X POST http://localhost:8000/orders/ \
   -H "Authorization: Bearer <access_token>" \
   -d '{"user_id": 1, "item_name": "Notebook", "quantity": 1, "price": 1500.00}'
 ```
+
+---
+
+## About the Project
+
+This project was developed with a focus on practical learning and continuous improvement, applying real backend concepts such as secure authentication, clean code organization, and iterative architectural refinement
 
 ---
 
