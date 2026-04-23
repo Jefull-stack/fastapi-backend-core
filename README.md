@@ -104,10 +104,12 @@ cp .env.example .env
 ### Environment Variables
 
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/dbname
 SECRET_KEY=your-secret-key-here
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
+ACCESS_SECRET_KEY: str = "CHANGE_ME"
+REFRESH_SECRET_KEY: str = "CHANGE_ME"
+DATABASE_URL=postgresql://user:password@localhost:5432/dbname
 ```
 
 ### Running
