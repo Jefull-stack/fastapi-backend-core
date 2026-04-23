@@ -48,6 +48,11 @@ class User(Base):
         DateTime(timezone=True),
         server_default=func.now()
         )
+    
+    updated_at = Column(
+    DateTime(timezone=True),
+    onupdate=func.now()
+    )
 
 class Product(Base):
     __tablename__ = "products"
@@ -127,6 +132,11 @@ class Order(Base):
         DateTime(timezone=True),
         server_default=func.now()
         )
+    
+    updated_at = Column(
+    DateTime(timezone=True),
+    onupdate=func.now()
+    )
     
 class OrderItem(Base):
     __tablename__ = "order_items"
