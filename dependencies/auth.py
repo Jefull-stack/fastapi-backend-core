@@ -16,12 +16,18 @@ def get_current_user(
     payload = decode_token(token)
     
     if not payload or payload.get("type") != "access":
-        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid authentication credentials"
+            )
             
     user = db.query(User).filter(User.id == payload["sub"]).first()
     
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+            )
     
     return user
     
