@@ -23,7 +23,9 @@ def verify_and_update(plain: str, hashed: str) -> tuple[bool, str | None]:
     except UnknownHashError:
         return False, None
 
-def create_access_token(data: dict, expires_minutes: int | None = None) -> str:
+def create_access_token(
+    data: dict,
+    expires_minutes: int | None = None) -> str:
     token_needs_sub(data)
     
     now = datetime.now(timezone.utc)
@@ -36,7 +38,10 @@ def create_access_token(data: dict, expires_minutes: int | None = None) -> str:
         "exp": expire,
         "type": "access",
     }
-    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    return jwt.encode(
+        payload,
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM)
 
 def create_refresh_token(data: dict) -> str:
     token_needs_sub(data)
@@ -50,7 +55,11 @@ def create_refresh_token(data: dict) -> str:
         "exp": expire,
         "type": "refresh",
     }
-    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    return jwt.encode(
+        payload,
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM
+        )
 
 def decode_token(token: str) -> dict | None:
     try:
@@ -60,6 +69,6 @@ def decode_token(token: str) -> dict | None:
             algorithms=[settings.ALGORITHM],
         )
     except ExpiredSignatureError:
-        return None  # ou tratar diferente
+        return None
     except JWTError:
         return None
