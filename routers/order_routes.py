@@ -13,7 +13,7 @@ async def get_orders(
     session: Session = Depends(take_session), 
     current_user: User = Depends(get_current_user)
     ):
-    orders = session.query(Order).all()
+    orders = session.query(Order).filter(Order.user_id == current_user.id).all()
     return orders
 
 @order_router.post("/")
