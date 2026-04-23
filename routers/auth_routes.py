@@ -11,7 +11,7 @@ from dependencies.auth import get_current_user
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
 @auth_router.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-def signup(payload: UserCreate, db: Session = Depends(take_session)):
+async def signup(payload: UserCreate, db: Session = Depends(take_session)):
     
     email = payload.email.lower().strip()
 
@@ -34,7 +34,7 @@ def signup(payload: UserCreate, db: Session = Depends(take_session)):
     return new_user
 
 @auth_router.post("/login")
-def login(payload: UserLogin, db: Session = Depends(take_session)):
+async def login(payload: UserLogin, db: Session = Depends(take_session)):
     user = db.query(User).filter(User.email == payload.email.lower().strip()).first()
 
     if not user:
@@ -55,7 +55,7 @@ def login(payload: UserLogin, db: Session = Depends(take_session)):
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 @auth_router.post("/refresh")
-def refresh(payload:RefreshTokenRequest):
+async def refresh(payload:RefreshTokenRequest):
     token_data = decode_token(payload.refresh_token)
     
     if not token_data or token_data.get("type") != "refresh":
@@ -65,5 +65,5 @@ def refresh(payload:RefreshTokenRequest):
     return {"access_token": new_token, "token_type": "bearer"}
 
 @auth_router.get("/me", response_model=UserResponse)
-def get_me(current_user: User = Depends(get_current_user)):
+async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
