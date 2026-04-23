@@ -61,13 +61,19 @@ def create_refresh_token(data: dict) -> str:
         algorithm=settings.ALGORITHM
         )
 
-def decode_token(token: str) -> dict | None:
+def decode_token(token: str, expected_type: str | None = None) -> dict | None:
     try:
-        return jwt.decode(
+        payload = jwt.decode(
             token,
             settings.SECRET_KEY,
             algorithms=[settings.ALGORITHM],
         )
+
+        if expected_type and payload.get("type") != expected_type:
+            return None
+
+        return payload
+
     except ExpiredSignatureError:
         return None
     except JWTError:
