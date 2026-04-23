@@ -10,16 +10,22 @@ from dependencies.auth import get_current_user
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
-@auth_router.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-async def signup(payload: UserCreate, db: Session = Depends(take_session)):
-    
+@auth_router.post(
+    "/signup",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED
+    )
+async def signup(
+    payload: UserCreate, 
+    db: Session = Depends(take_session)
+    ):
     email = payload.email.lower().strip()
 
     new_user = User(
         name=payload.name,
         email=email,
         hashed_password=hash_password(payload.password)
-    )
+        )
     try:
         db.add(new_user)
         db.commit()
@@ -34,16 +40,27 @@ async def signup(payload: UserCreate, db: Session = Depends(take_session)):
     return new_user
 
 @auth_router.post("/login")
-async def login(payload: UserLogin, db: Session = Depends(take_session)):
+async def login(
+    payload: UserLogin,
+    db: Session = Depends(take_session)):
     user = db.query(User).filter(User.email == payload.email.lower().strip()).first()
 
     if not user:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid credentials"
+            )
     
-    valid, new_hash = verify_and_update(payload.password, str(user.hashed_password))
+    valid, new_hash = verify_and_update(
+        payload.password,
+        str(user.hashed_password)
+        )
 
     if not valid:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid credentials"
+            )
     
     if new_hash:
         user.hashed_password = new_hash #type: ignore
@@ -52,17 +69,26 @@ async def login(payload: UserLogin, db: Session = Depends(take_session)):
 
     access_token = create_access_token({"sub": user.id})
     refresh_token = create_refresh_token({"sub": user.id})
-    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer"
+        }
 
 @auth_router.post("/refresh")
 async def refresh(payload:RefreshTokenRequest):
     token_data = decode_token(payload.refresh_token)
     
     if not token_data or token_data.get("type") != "refresh":
-        raise HTTPException(status_code=401, detail="Invalid refresh token")
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid refresh token"
+            )
     
     new_token = create_access_token({"sub":token_data ["sub"] })
-    return {"access_token": new_token, "token_type": "bearer"}
+    return {
+        "access_token": new_token,
+        "token_type": "bearer"}
 
 @auth_router.get("/me", response_model=UserResponse)
 async def get_me(current_user: User = Depends(get_current_user)):
