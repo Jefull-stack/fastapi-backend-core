@@ -6,7 +6,7 @@ from schemas import OrderCreate, OrderUpdate
 from models import User, Order, OrderStatus
 
 
-order_router = APIRouter(prefix="/orders", tags=["orders"])
+order_router = APIRouter(prefix="/orders", tags=["orders"], dependencies=[Depends(get_current_user)])
 
 @order_router.get("/")
 async def get_orders(
