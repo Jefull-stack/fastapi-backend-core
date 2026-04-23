@@ -34,8 +34,8 @@ def create_access_token(
 
     payload = {
         "sub": str(data["sub"]),
-        "iat": now,
-        "exp": expire,
+        "iat": int(now.timestamp()),
+        "exp": int(expire.timestamp()),
         "type": "access",
         "iss": "your-api",
         "aud": "your-client"
@@ -54,8 +54,8 @@ def create_refresh_token(data: dict) -> str:
     
     payload = {
         "sub": str(data["sub"]),
-        "iat": now,
-        "exp": expire,
+        "iat": int(now.timestamp()),
+        "exp": int(expire.timestamp()),
         "type": "refresh",
         "iss": "your-api",
         "aud": "your-client"
@@ -81,11 +81,16 @@ def decode_token(
             key,
             algorithms=[settings.ALGORITHM],
             audience="your-client",
-            issuer="your-api"
-        )
-        if expected_type and payload.get("type") != expected_type:
+            issuer="your-api",
+            options={"leeway": 5}
+            )
+        
+        if payload.get("type") != expected_type:
             return None
-
+        
+        if not payload.get("sub"):
+            return None
+        
         return payload
 
     except ExpiredSignatureError:
