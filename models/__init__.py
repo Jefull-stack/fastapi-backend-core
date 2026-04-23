@@ -139,13 +139,16 @@ class OrderItem(Base):
 
     order_id = Column(
     Integer,
-    ForeignKey("orders.id")
-        )
+    ForeignKey("orders.id"),
+    nullable=False
+    )
 
     product_id = Column(
         Integer,
-        ForeignKey("products.id")
+        ForeignKey("products.id"),
+        nullable=False
         )
+    
     quantity = Column(
         Integer,
         nullable=False
