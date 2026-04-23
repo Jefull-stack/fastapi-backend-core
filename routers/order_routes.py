@@ -38,7 +38,7 @@ async def get_order(
     order_id: int,
     session: Session = Depends(take_session),
     current_user: User = Depends(get_current_user)
-):
+    ):
     order = session.query(Order).filter(Order.id == order_id).first()
 
     if not order:
@@ -73,7 +73,7 @@ def update_order(
     payload: OrderUpdate,
     session: Session = Depends(take_session),
     current_user: User = Depends(get_current_user)
-):
+    ):
     order = session.query(Order).filter(Order.id == order_id).first()
 
     if not order:
@@ -99,7 +99,7 @@ def delete_order(
     order_id: int,
     session: Session = Depends(take_session),
     current_user: User = Depends(get_current_user)
-):
+    ):
     order = session.query(Order).filter(Order.id == order_id).first()
 
     if not order:
