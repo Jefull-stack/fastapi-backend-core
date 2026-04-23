@@ -37,10 +37,12 @@ def create_access_token(
         "iat": now,
         "exp": expire,
         "type": "access",
+        "iss": "your-api",
+        "aud": "your-client"
     }
     return jwt.encode(
         payload,
-        settings.SECRET_KEY,
+        settings.ACCESS_SECRET_KEY,
         algorithm=settings.ALGORITHM)
 
 def create_refresh_token(data: dict) -> str:
@@ -54,20 +56,34 @@ def create_refresh_token(data: dict) -> str:
         "iat": now,
         "exp": expire,
         "type": "refresh",
+        "iss": "your-api",
+        "aud": "your-client"
     }
     return jwt.encode(
         payload,
-        settings.SECRET_KEY,
+        settings.REFRESH_SECRET_KEY,
         algorithm=settings.ALGORITHM
         )
 
-def decode_token(token: str, expected_type: str | None = None) -> dict | None:
+def decode_token(
+    token: str,
+    expected_type: str | None = None
+) -> dict | None:
     try:
+        key = (
+            settings.ACCESS_SECRET_KEY
+            if expected_type == "access"
+            else settings.REFRESH_SECRET_KEY
+        )
+
         payload = jwt.decode(
             token,
-            settings.SECRET_KEY,
+            key,
             algorithms=[settings.ALGORITHM],
         )
+
+        if payload.get("iss") != "your-api" or payload.get("aud") != "your-client":
+            return None
 
         if expected_type and payload.get("type") != expected_type:
             return None
