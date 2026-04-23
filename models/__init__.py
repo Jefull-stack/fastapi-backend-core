@@ -1,6 +1,3 @@
-# The code defines SQLAlchemy models for users, orders, and products with relationships and attributes
-# such as order status and product stock.
-
 from sqlalchemy import Column, Integer, String, Boolean, Float, ForeignKey, Enum as SQLEnum, DateTime, Numeric
 from sqlalchemy.orm import relationship
 from enum import Enum
