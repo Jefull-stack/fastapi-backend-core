@@ -56,7 +56,6 @@ class Product(Base):
         Integer,
         primary_key=True,
         index=True,
-        nullable=False
         )
     
     name = Column(
@@ -98,7 +97,6 @@ class Order(Base):
         Integer,
         primary_key=True,
         index=True,
-        nullable=False
         )
 
     status = Column(
@@ -129,7 +127,7 @@ class Order(Base):
         DateTime(timezone=True),
         server_default=func.now()
         )
-
+    
 class OrderItem(Base):
     __tablename__ = "order_items"
     id = Column(
