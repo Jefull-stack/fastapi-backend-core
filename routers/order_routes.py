@@ -68,7 +68,7 @@ async def cancel_order(
     return {"message": f"Order {order_id} cancelled"}
 
 @order_router.put("/{order_id}")
-def update_order(
+async def update_order(
     order_id: int,
     payload: OrderUpdate,
     session: Session = Depends(take_session),
@@ -95,7 +95,7 @@ def update_order(
 
 
 @order_router.delete("/{order_id}")
-def delete_order(
+async def delete_order(
     order_id: int,
     session: Session = Depends(take_session),
     current_user: User = Depends(get_current_user)
