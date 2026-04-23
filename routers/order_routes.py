@@ -6,7 +6,10 @@ from schemas import OrderCreate, OrderUpdate
 from models import User, Order, OrderStatus
 
 
-order_router = APIRouter(prefix="/orders", tags=["orders"], dependencies=[Depends(get_current_user)])
+order_router = APIRouter(
+    prefix="/orders", tags=["orders"],
+    dependencies=[Depends(get_current_user)]
+    )
 
 @order_router.get("/")
 async def get_orders(
@@ -42,10 +45,16 @@ async def get_order(
     order = session.query(Order).filter(Order.id == order_id).first()
 
     if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Order not found"
+        )
 
     if int(order.user_id) != int(current_user.id):  # type: ignore
-        raise HTTPException(status_code=403, detail="Not your order")
+        raise HTTPException(
+            status_code=403,
+            detail="Not your order"
+        )
 
     return order
 
@@ -58,10 +67,16 @@ async def cancel_order(
     order = session.query(Order).filter(Order.id == order_id).first()
     
     if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Order not found"
+        )
     
     if int(order.user_id) != int(current_user.id): #type: ignore
-        raise HTTPException (status_code=403, detail="Not your order")
+        raise HTTPException (
+            status_code=403,
+            detail="Not your order"
+            )
     
     order.status = OrderStatus.cancelled #type: ignore
     session.commit()
@@ -77,10 +92,16 @@ async def update_order(
     order = session.query(Order).filter(Order.id == order_id).first()
 
     if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Order not found"
+        )
 
     if order.user_id != current_user.id:  # type: ignore
-        raise HTTPException(status_code=403, detail="Not your order")
+        raise HTTPException(
+            status_code=403,
+            detail="Not your order"
+        )
 
     if payload.item_name:
         order.item_name = payload.item_name  # type: ignore
@@ -103,10 +124,16 @@ async def delete_order(
     order = session.query(Order).filter(Order.id == order_id).first()
 
     if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Order not found"
+            )
 
     if order.user_id != current_user.id:  # type: ignore
-        raise HTTPException(status_code=403, detail="Not your order")
+        raise HTTPException(
+            status_code=403,
+            detail="Not your order"
+        )
 
     session.delete(order)
     session.commit()
