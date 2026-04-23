@@ -79,10 +79,10 @@ class Product(Base):
         nullable=False
         )
     
-    product = relationship(
-    "Product",
-    back_populates="order_items"
-    )
+    order_items = relationship(
+    "OrderItem",
+    back_populates="product"
+)
 
 class OrderStatus(str, Enum):
     pending = "pending"
@@ -154,11 +154,8 @@ class OrderItem(Base):
     price = Column(
         Numeric(10, 2),
         nullable=False
-        ) 
-
-    order = relationship(
-        "Order",
-        back_populates="items"
         )
-
-    product = relationship("Product")
+    product = relationship(
+    "Product",
+    back_populates="order_items"
+    )
